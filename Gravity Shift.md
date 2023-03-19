@@ -1,6 +1,6 @@
 <div dir='rtl' lang='he'>
 
-# כותרת ראשית: שם המשחק
+# Gravity Shift
 
 **tagline: "Defy gravity and challenge your mind in this captivating puzzle game, where every shift changes your perspective and unlocks a new world of possibilities!"**
 ## מהות המשחק
