@@ -1,2 +1,4 @@
+<div dir='rtl' lang='he'>
 # Gravity Shift
-The second assigment in game development course.
+
+<div>
