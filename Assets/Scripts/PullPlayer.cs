@@ -18,7 +18,6 @@ public class PullPlayer : MonoBehaviour
         playerRB = GameObject.Find("Player").GetComponent<Rigidbody2D>();
         tileMap = transform.GetComponentInParent<Tilemap>();
         availablePlaces = new List<Vector3>();
-        
         for (int n = tileMap.cellBounds.xMin; n < tileMap.cellBounds.xMax; n++)
         {
             for (int p = tileMap.cellBounds.yMin; p < tileMap.cellBounds.yMax; p++)
@@ -36,11 +35,10 @@ public class PullPlayer : MonoBehaviour
 
     void FixedUpdate()
     {
-
         foreach(Vector3 vec in availablePlaces)
         {
             RaycastHit2D[] hits;
-            hits = Physics2D.BoxCastAll(vec,new Vector2(1,1),0, -direction);
+            hits = Physics2D.BoxCastAll(vec, new Vector2(1,1), 0, -direction);
 
             bool wall = false;
             foreach (RaycastHit2D hit in hits)
@@ -64,8 +62,6 @@ public class PullPlayer : MonoBehaviour
                     playerRB.AddForce(direction * force, ForceMode2D.Impulse);
                 }
             }
-            
-        }
-        
+        }  
     }
 }
