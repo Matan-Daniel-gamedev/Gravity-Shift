@@ -5,24 +5,17 @@ using UnityEngine.Tilemaps;
 
 public class PullPlayer : MonoBehaviour
 {
-    GameObject player;
+    Rigidbody2D playerRB;
     public float force = 1.0f;
     public Vector2 direction = new Vector2(1, 0);
-    Vector3 actualPos;
 
     public Tilemap tileMap = null;
     public List<Vector3> availablePlaces;
 
-    private bool isAdjacent = false;
     // Start is called before the first frame update
     void Start()
     {
-        player = GameObject.Find("Player");
-        /*
-        GridLayout gridLayout = transform.parent.GetComponentInParent<GridLayout>();
-        Vector3Int cellPosition = gridLayout.WorldToCell(transform.position);
-        actualPos = gridLayout.CellToWorld(cellPosition);
-        */
+        playerRB = GameObject.Find("Player").GetComponent<Rigidbody2D>();
         tileMap = transform.GetComponentInParent<Tilemap>();
         availablePlaces = new List<Vector3>();
         
@@ -37,31 +30,8 @@ public class PullPlayer : MonoBehaviour
                     //Tile at "place"
                     availablePlaces.Add(place);
                 }
-                else
-                {
-                    //No tile at "place"
-                }
             }
         }
-        
-        /*
-        foreach (var position in tileMap.cellBounds.allPositionsWithin)
-        {
-            if (!tileMap.HasTile(position))
-            {
-                continue;
-            }
-            availablePlaces.Add(position);
-            // Tile is not empty; do stuff
-        }
-        */
-        Debug.Log(availablePlaces.Count);
-        /*
-        foreach (Vector3 vec in availablePlaces)
-        {
-            Debug.Log(vec);
-        }
-        */
     }
 
     void FixedUpdate()
@@ -71,26 +41,12 @@ public class PullPlayer : MonoBehaviour
         {
             RaycastHit2D[] hits;
             hits = Physics2D.BoxCastAll(vec,new Vector2(1,1),0, -direction);
-            /*
-            if (hits.Length > 1)
+
+            bool wall = false;
+            foreach (RaycastHit2D hit in hits)
             {
-                if (hits[1].collider != null && hits[1].collider.gameObject.tag == "Player")
-                {
-                    player.transform.GetComponent<Rigidbody2D>().AddForce(direction * force, ForceMode2D.Impulse);
-                    Debug.Log("Ray hit player");
-                }
-                else
-                {
-                    Debug.Log(hits[1].collider.gameObject.name);
-                }
-            }
-            */
-            //RaycastHit2D hit = Physics2D.Raycast(vec, -direction);
-            
-            foreach(RaycastHit2D hit in hits)
-            {
-                bool wall = false;
-                if(hit.collider != null && hit.collider.gameObject.name.Contains("Walls"))
+                bool hitWall = hit.collider != null && hit.collider.gameObject.name.Contains("Walls");
+                if (hitWall)
                 {
                     if (wall)
                     {
@@ -102,27 +58,14 @@ public class PullPlayer : MonoBehaviour
                         continue;
                     }
                 }
-
-                if (hit.collider != null && hit.collider.gameObject.tag == "Player" && !isAdjacent)
+                bool hitPlayer = hit.collider != null && hit.collider.gameObject.tag == "Player";
+                if (hitPlayer)
                 {
-                    player.transform.GetComponent<Rigidbody2D>().AddForce(direction * force, ForceMode2D.Impulse);
-                    //Debug.Log("Ray hit player");
-                }
-                else
-                {
-                    //Debug.Log(hit.collider.gameObject.name);
+                    playerRB.AddForce(direction * force, ForceMode2D.Impulse);
                 }
             }
             
         }
         
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.tag == "Player")
-        {
-            isAdjacent = true;
-        }
     }
 }

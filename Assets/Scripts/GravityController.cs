@@ -6,12 +6,17 @@ public class GravityController : MonoBehaviour
 {
     public bool toggle = false;
     public float multiplier = 5;
+    public float cooldownAmount = 0.1f;
     Vector2 vec = Vector2.zero;
-    float cooldown=0;
-    // Start is called before the first frame update
-    void Start()
-    {
 
+    float cooldown=0;
+    float forceMultiplier = 10f;
+
+    Rigidbody2D rb;
+
+    private void Start()
+    {
+        rb = gameObject.GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
@@ -23,8 +28,7 @@ public class GravityController : MonoBehaviour
             {
                 toggle = !toggle;
                 vec *= -1;
-                cooldown = 0.1f;
-                //Physics2D.gravity *= -1;
+                cooldown = cooldownAmount;
             }
             else
             {
@@ -36,16 +40,16 @@ public class GravityController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        gameObject.GetComponent<Rigidbody2D>().AddForce(vec, ForceMode2D.Impulse);
+        rb.AddForce(vec, ForceMode2D.Impulse);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.name.Contains("Walls"))
+        bool hitWall = collision.gameObject.name.Contains("Walls");
+        if (hitWall)
         {
             Vector2 surfaceNormal = collision.contacts[0].normal;
-            float angle = Vector3.Angle(surfaceNormal, Vector3.up);
-            vec = -surfaceNormal * 10f;
+            vec = -surfaceNormal * forceMultiplier;
         }
     }
 }
