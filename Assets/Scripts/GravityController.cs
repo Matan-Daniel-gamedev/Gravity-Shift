@@ -9,7 +9,7 @@ public class GravityController : MonoBehaviour
     public float cooldownAmount = 0.1f;
     Vector2 vec = Vector2.zero;
 
-    float cooldown=0;
+    float cooldown = 0;
     float forceMultiplier = 10f;
 
     Rigidbody2D rb;
